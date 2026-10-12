@@ -23,6 +23,7 @@ export function useConversion(
   const [error, setError] = useState("");
   const [conversion, setConversion] = useState<Conversion | null>(null);
   const [retry, setRetry] = useState(0);
+  const [history, setHistory] = useState<Conversion[]>([]);
 
   useEffect(() => {
     if (!enabled || amount === null || !from || !to) {
@@ -50,6 +51,7 @@ export function useConversion(
         .then((result) => {
           if (cancelled) return;
           setConversion(result);
+          setHistory((prev) => [result, ...prev].slice(0, 5));
           setLoading(false);
         })
         .catch((err: unknown) => {
@@ -73,6 +75,7 @@ export function useConversion(
     loading,
     error,
     conversion,
+    history,
     retryConversion: () => setRetry((n) => n + 1),
   };
 }

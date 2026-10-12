@@ -12,8 +12,8 @@ export function Converter() {
     invalid,
     loading,
     error: convertError,
-    conversion,
     retryConversion,
+    history,
   } = useConversion(from, to, amount, status === "ready");
 
   return (
@@ -84,23 +84,18 @@ export function Converter() {
           </div>
         ) : null}
 
-        {conversion && !invalid && !loading && !convertError ? (
+        {history.map(({ value, to, amount, date }) => (
           <>
             <p className="mb-2 text-2xl font-semibold text-gray-950">
-              {formatMoney(conversion.value, conversion.to)}
+              {formatMoney(value, to)}
             </p>
             <p className="mt-1 text-sm">
-              Rate: 1 {conversion.from} ={" "}
-              {conversion.amount
-                ? formatNumber(conversion.value / conversion.amount)
-                : "-"}{" "}
-              {conversion.to}
+              Rate: 1 {from} = {amount ? formatNumber(value / amount) : "-"}{" "}
+              {to}
             </p>
-            {conversion.date ? (
-              <p className="mt-1 text-sm">Date: {conversion.date}</p>
-            ) : null}
+            {date ? <p className="mt-1 text-sm">Date: {date}</p> : null}
           </>
-        ) : null}
+        ))}
       </section>
     </main>
   );
